@@ -7,24 +7,41 @@ const String discord_webhook = "https://discordapp.com/api/webhooks/813341551782
 const String discord_tts = "false"; //TTS= Text To Speech "true" for at tænde det og "false" for at slå det fra
 //openssl s_client -showcerts -connect discordapp.com:443 (get last certificate)
 HX711 scale;
-    String drikkelse[] = {"Cocktail", "Sodavand", "Kaffe", "Vand", "Shots"};
-
+String drikkelse[] = {"Cocktail", "Sodavand", "Kaffe", "Vand", "Shots"};
+int j=0;
 long val = 0;
 float count = 0;
-void vaegt(){
+int drak;
+int val1;
+int val2;
+void vaegt() {
+  j++;
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   count = count + 1;
 
   // Use only one of these
- // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // take long term average
- //val = 0.2 * val    +   0.8 * scale.read(); // take recent average
+  // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // take long term average
+  //val = 0.2 * val    +   0.8 * scale.read(); // take recent average
   val = scale.read(); // most recent reading
-  val=(val-149230)/198460.0f*177;
-  Serial.println((val));
-  //Serial.println( ( 8372000 - val ) / 1020.37f );
-  //  Serial.println( val );
-  delay(50);
+  val = (val - 149230) / 198460.0f * 177;
+
+  if (val > 212.4 && j == 1) {
   
+    val1 = scale.read(); // most recent reading
+    val1 = (val1 - 149230) / 198460.0f * 177;
+    delay(50);
+  } else if (val > 212.4 && j == 2) {
+    val2 = scale.read(); // most recent reading
+    val2 = (val2 - 149230) / 198460.0f * 177;
+    drak=val1-val2;
+    delay(50);
+    j=0;
+  
+  } else {
+Serial.println("Error, glass too light");
+  }
+ //Serial.println( ( 8372000 - val ) / 1020.37f );
+  //  Serial.println( val );
 }
 
 void wifi() {
@@ -44,7 +61,7 @@ void besked(String content) {
     client -> setCACert(discordappCertificate);
     {
       HTTPClient https;
-      Serial.println("[HTTP] Connecting to Discord..."); 
+      Serial.println("[HTTP] Connecting to Discord...");
       Serial.println("[HTTP] Message: " + content);
       Serial.println("[HTTP] TTS: " + discord_tts);
       if (https.begin(*client, discord_webhook)) {  // HTTPS

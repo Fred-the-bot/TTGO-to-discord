@@ -8,6 +8,7 @@
 TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 #include "torta.h"
 int i = -1;
+int k = 0;
 void setup() {
   Serial.begin(115200);
   wifi();
@@ -15,18 +16,29 @@ void setup() {
   pinMode(35, INPUT); //Højre knap
   tft.init();
   tft.setRotation(45);
-
   tft.setSwapBytes(true);
-  tft.pushImage(0, 0,  135, 240, bootlogo);
+  tft.pushImage(0, 0,  240, 135, bootlogo);
 }
 
 void loop() {
 
   if (digitalRead(35) == 0) {
+    delay(250); //For at undgå at den køre flere gange når der bare skal trykkes
+    k++;
     vaegt();
-    String test = String(val);
-    besked("Fred the bot drikker nu");
-    besked(drikkelse[i]);
+    if (k == 1) {
+      besked("Fred the bot drikker nu");
+      besked(drikkelse[i]);
+    } else if (k == 2) {
+      besked("Fred the bot har drukket");
+      String test = String(drak);
+      delay(10);
+      besked(test);
+      besked("Milliliter");
+      k = 0;
+    } else {
+Serial.println("ERROR: 1");
+    }
   }
 
 
@@ -36,12 +48,10 @@ void loop() {
     if (i == 5) {
       i = 0;
     }
-    
     tft.fillScreen(TFT_BLACK);
     tft.setCursor(13, 50, 2);
 
     tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
     tft.println(drikkelse[i]);
   }
-
 }
