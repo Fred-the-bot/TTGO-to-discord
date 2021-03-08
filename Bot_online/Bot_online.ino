@@ -3,10 +3,11 @@ int k = 0;
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
-#include "certificate.h"
-#include "kommandoer.h"
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
+#include "certificate.h"
+#include "error_codes.h"
+#include "kommandoer.h"
 //TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 
 void setup() {
@@ -38,10 +39,10 @@ if(WiFi.status() != WL_CONNECTED) {
       besked(test);
       besked("mL");
       k = 0;
-    } else {
+    } else if(k!=1 && drak!=0 || k!=2 && drak!=0); {
       k=0;
       j=0;
-      Serial.println("ERROR: either no value was detected (see above) or something went wrong, check function at line 34 in 'bot_online'");
+      error_code(501);
     }
   }
 

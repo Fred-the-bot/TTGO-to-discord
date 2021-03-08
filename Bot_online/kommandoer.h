@@ -1,8 +1,7 @@
 #include "HX711.h"
-#include <SPI.h>
-#include <TFT_eSPI.h> // Hardware-specific library
-TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 #include "torta.h"
+TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
+
 const int LOADCELL_DOUT_PIN = 33;
 const int LOADCELL_SCK_PIN = 32;
 const char ssid[] = "amfelt";    // Netværks navnet
@@ -39,13 +38,13 @@ void vaegt() {
     val2 = (val2 - 149230) / 198460.0f * 177;
     drak = val1 - val2;
     if (drak==0){
-      Serial.println("ERROR: No value detectet");
-      
+      error_code(301);      
     }
     delay(50);
     j = 0;
   } else {
-    Serial.println("ERROR: glass too light");
+    error_code(302);
+
   }
 }
 
@@ -76,7 +75,6 @@ void besked(String content) {
       HTTPClient https;
       Serial.println("[HTTP] Connecting to Discord...");
       Serial.println("[HTTP] Message: " + content);
-      Serial.println("[HTTP] TTS: " + discord_tts);
       if (https.begin(*client, discord_webhook)) {  // HTTPS
         // start connection and send HTTP header
         https.addHeader("Content-Type", "application/json");
