@@ -1,8 +1,31 @@
+#include "HX711.h"
+const int LOADCELL_DOUT_PIN = 33;
+const int LOADCELL_SCK_PIN = 32;
 const char ssid[] = "amfelt";    // Netværks navnet
 const char pass[] = "12345678";    // Netværks passwordet
 const String discord_webhook = "https://discordapp.com/api/webhooks/813341551782264862/f7Efm9NiinYUNTPekyvl86dS_7ymjbwLj8wr-v23sARUex120yte1ssylaft_Eq4AoK0"; //webhooken til discord "botten"
 const String discord_tts = "false"; //TTS= Text To Speech "true" for at tænde det og "false" for at slå det fra
 //openssl s_client -showcerts -connect discordapp.com:443 (get last certificate)
+HX711 scale;
+    String drikkelse[] = {"Cocktail", "Sodavand", "Kaffe", "Vand", "Shots"};
+
+long val = 0;
+float count = 0;
+void vaegt(){
+  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  count = count + 1;
+
+  // Use only one of these
+ // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // take long term average
+ //val = 0.2 * val    +   0.8 * scale.read(); // take recent average
+  val = scale.read(); // most recent reading
+  val=(val-149230)/198460.0f*177;
+  Serial.println((val));
+  //Serial.println( ( 8372000 - val ) / 1020.37f );
+  //  Serial.println( val );
+  delay(50);
+  
+}
 
 void wifi() {
   WiFi.begin(ssid, pass);
