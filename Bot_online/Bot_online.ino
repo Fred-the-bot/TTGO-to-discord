@@ -6,7 +6,7 @@
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
 //TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
-#include "torta.h"
+//#include "torta.h"
 int i = -1;
 int k = 0;
 void setup() {
