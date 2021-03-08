@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
 TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
-
+#include "torta.h"
 const int LOADCELL_DOUT_PIN = 33;
 const int LOADCELL_SCK_PIN = 32;
 const char ssid[] = "amfelt";    // Netværks navnet
