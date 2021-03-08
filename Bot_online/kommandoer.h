@@ -38,10 +38,14 @@ void vaegt() {
     val2 = scale.read(); // most recent reading
     val2 = (val2 - 149230) / 198460.0f * 177;
     drak = val1 - val2;
+    if (drak==0){
+      Serial.println("ERROR: No value detectet");
+      
+    }
     delay(50);
     j = 0;
   } else {
-    Serial.println("Error, glass too light");
+    Serial.println("ERROR: glass too light");
   }
 }
 

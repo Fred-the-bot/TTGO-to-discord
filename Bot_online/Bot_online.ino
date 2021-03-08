@@ -29,17 +29,19 @@ if(WiFi.status() != WL_CONNECTED) {
     k++;
     vaegt();
     if (k == 1) {
-      besked("Fred the bot drikker nu");
+      besked("Frederik drikker nu");
       besked(drikkelse[i]);
-    } else if (k == 2) {
-      besked("Fred the bot har drukket");
+    } else if (k == 2 && drak!=0) {
+      besked("Frederik har drukket");
       String test = String(drak);
       delay(10);
       besked(test);
-      besked("Milliliter");
+      besked("mL");
       k = 0;
     } else {
-      Serial.println("ERROR: 1");
+      k=0;
+      j=0;
+      Serial.println("ERROR: either no value was detected (see above) or something went wrong, check function at line 34 in 'bot_online'");
     }
   }
 
