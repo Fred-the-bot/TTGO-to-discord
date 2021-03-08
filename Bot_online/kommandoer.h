@@ -1,4 +1,8 @@
 #include "HX711.h"
+#include <SPI.h>
+#include <TFT_eSPI.h> // Hardware-specific library
+TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
+
 const int LOADCELL_DOUT_PIN = 33;
 const int LOADCELL_SCK_PIN = 32;
 const char ssid[] = "amfelt";    // Netværks navnet
@@ -8,7 +12,7 @@ const String discord_tts = "false"; //TTS= Text To Speech "true" for at tænde d
 //openssl s_client -showcerts -connect discordapp.com:443 (get last certificate)
 HX711 scale;
 String drikkelse[] = {"Cocktail", "Sodavand", "Kaffe", "Vand", "Shots"};
-int j=0;
+int j = 0;
 long val = 0;
 float count = 0;
 int drak;
@@ -26,31 +30,39 @@ void vaegt() {
   val = (val - 149230) / 198460.0f * 177;
 
   if (val > 212.4 && j == 1) {
-  
+
     val1 = scale.read(); // most recent reading
     val1 = (val1 - 149230) / 198460.0f * 177;
     delay(50);
   } else if (val > 212.4 && j == 2) {
     val2 = scale.read(); // most recent reading
     val2 = (val2 - 149230) / 198460.0f * 177;
-    drak=val1-val2;
+    drak = val1 - val2;
     delay(50);
-    j=0;
-  
+    j = 0;
+
   } else {
-Serial.println("Error, glass too light");
+    Serial.println("Error, glass too light");
   }
- //Serial.println( ( 8372000 - val ) / 1020.37f );
+  //Serial.println( ( 8372000 - val ) / 1020.37f );
   //  Serial.println( val );
 }
 
 void wifi() {
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(13, 5, 2);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
+  tft.println("Searching");
+  tft.setCursor(13, 70, 2);
+  tft.println("for wifi");
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println("Connecting to WiFi..");
   }
   Serial.println("Connected to the WiFi network");
+  tft.pushImage(0, 0,  240, 135, bootlogo);
 }
 
 

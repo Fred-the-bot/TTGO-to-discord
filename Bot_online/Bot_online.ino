@@ -5,22 +5,25 @@
 #include "kommandoer.h"
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
-TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
+//TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 #include "torta.h"
 int i = -1;
 int k = 0;
 void setup() {
   Serial.begin(115200);
-  wifi();
-  pinMode(0, INPUT); //venstre knap if ==0 så den trykket ned
-  pinMode(35, INPUT); //Højre knap
   tft.init();
   tft.setRotation(45);
   tft.setSwapBytes(true);
-  tft.pushImage(0, 0,  240, 135, bootlogo);
+  wifi();
+  pinMode(0, INPUT); //venstre knap if ==0 så den trykket ned
+  pinMode(35, INPUT); //Højre knap
 }
 
 void loop() {
+
+if(WiFi.status() != WL_CONNECTED) {
+  wifi();
+}
 
   if (digitalRead(35) == 0) {
     delay(250); //For at undgå at den køre flere gange når der bare skal trykkes
@@ -37,7 +40,7 @@ void loop() {
       besked("Milliliter");
       k = 0;
     } else {
-Serial.println("ERROR: 1");
+      Serial.println("ERROR: 1");
     }
   }
 
