@@ -37,8 +37,8 @@ void vaegt() {
     val2 = scale.read(); // most recent reading
     val2 = (val2 - 149230) / 198460.0f * 177;
     drak = val1 - val2;
-    if (drak==0){
-      error_code(301);      
+    if (drak == 0) {
+      error_code(301);
     }
     delay(50);
     j = 0;
@@ -93,13 +93,14 @@ void besked(String content) {
             Serial.println(payload);
           }
         } else {
-          Serial.print("[HTTP] Post... failed, error: ");
-          Serial.println(https.errorToString(httpCode).c_str());
+          error_code(502);
+      Serial.println(https.errorToString(httpCode).c_str()); //skal kigges på
         }
 
         https.end();
       } else {
-        Serial.printf("[HTTP] Unable to connect\n");
+        error_code(503);
+ 
       }
 
       // End extra scoping block
@@ -107,6 +108,7 @@ void besked(String content) {
 
     delete client;
   } else {
-    Serial.println("[HTTP] Unable to create client");
+    error_code(504);
+
   }
 }

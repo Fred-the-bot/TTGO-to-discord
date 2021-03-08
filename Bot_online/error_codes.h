@@ -22,11 +22,23 @@ void error_code(int code) {
       break;
 
 
-    case 502: //ukendt fejl i koden
+
+    case 501: //ukendt fejl i koden
       Serial.println("ERROR: Unkown error, check line 42 in 'Bot_online'");
       break;
 
+    case 502: //skal kigges på
+      Serial.print("[HTTP] Post... failed, error: ");
 
+      break;
+
+    case 503:
+      Serial.printf("[HTTP] Unable to connect\n");
+      break;
+
+    case 504:
+      Serial.println("[HTTP] Unable to create client");
+      break;
   }
 
 
