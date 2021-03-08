@@ -1,3 +1,5 @@
+int i = -1;
+int k = 0;
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
@@ -6,9 +8,7 @@
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
 //TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
-//#include "torta.h"
-int i = -1;
-int k = 0;
+
 void setup() {
   Serial.begin(115200);
   tft.init();
@@ -24,7 +24,6 @@ void loop() {
 if(WiFi.status() != WL_CONNECTED) {
   wifi();
 }
-
   if (digitalRead(35) == 0) {
     delay(250); //For at undgå at den køre flere gange når der bare skal trykkes
     k++;
@@ -44,7 +43,6 @@ if(WiFi.status() != WL_CONNECTED) {
     }
   }
 
-
   if (digitalRead(0) == 0) {
     delay(250); //For at undgå at den køre flere gange når der bare skal trykkes
     i++;
@@ -53,7 +51,6 @@ if(WiFi.status() != WL_CONNECTED) {
     }
     tft.fillScreen(TFT_BLACK);
     tft.setCursor(13, 50, 2);
-
     tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
     tft.println(drikkelse[i]);
   }

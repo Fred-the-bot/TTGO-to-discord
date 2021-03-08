@@ -18,11 +18,12 @@ float count = 0;
 int drak;
 int val1;
 int val2;
+
+
 void vaegt() {
   j++;
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   count = count + 1;
-
   // Use only one of these
   // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // take long term average
   //val = 0.2 * val    +   0.8 * scale.read(); // take recent average
@@ -30,7 +31,6 @@ void vaegt() {
   val = (val - 149230) / 198460.0f * 177;
 
   if (val > 212.4 && j == 1) {
-
     val1 = scale.read(); // most recent reading
     val1 = (val1 - 149230) / 198460.0f * 177;
     delay(50);
@@ -40,18 +40,17 @@ void vaegt() {
     drak = val1 - val2;
     delay(50);
     j = 0;
-
   } else {
     Serial.println("Error, glass too light");
   }
-  //Serial.println( ( 8372000 - val ) / 1020.37f );
-  //  Serial.println( val );
 }
 
 void wifi() {
+  i = -1;
+  k = 0;
+  j = 0;
   tft.fillScreen(TFT_BLACK);
   tft.setCursor(13, 5, 2);
-
   tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
   tft.println("Searching");
   tft.setCursor(13, 70, 2);
@@ -64,8 +63,6 @@ void wifi() {
   Serial.println("Connected to the WiFi network");
   tft.pushImage(0, 0,  240, 135, bootlogo);
 }
-
-
 
 void besked(String content) {
   WiFiClientSecure *client = new WiFiClientSecure;
