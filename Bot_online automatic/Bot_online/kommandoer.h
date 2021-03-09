@@ -1,8 +1,6 @@
 #include "HX711.h"
 #include "torta.h"
-#include <SPI.h>
-#include <TFT_eSPI.h> // Hardware-specific library
-TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
+
 
 const int LOADCELL_DOUT_PIN = 33;
 const int LOADCELL_SCK_PIN = 32;
@@ -20,41 +18,11 @@ int drak;
 int val1;
 int val2;
 bool drik;
-
+int glas = 100;
 float drikketid; //hvor længe man var om at drikke
 unsigned long nutid = 0; //bliver brugt til at holde øje med tid
 unsigned long datid = 0; //bliver brugt til at holde øje med tid
 
-
-/*void vaegt() {
-  j++;
-  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-  count = count + 1;
-  // Use only one of these
-  // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // take long term average
-  //val = 0.2 * val    +   0.8 * scale.read(); // take recent average
-  val = scale.read(); // most recent reading
-  val = (val - 149230) / 198460.0f * 177;
-
-  if (val > 212.4 && j == 1) {
-    val1 = scale.read(); // most recent reading
-    val1 = (val1 - 149230) / 198460.0f * 177;
-    delay(50);
-  } else if (val > 212.4 && j == 2) {
-    val2 = scale.read(); // most recent reading
-    val2 = (val2 - 149230) / 198460.0f * 177;
-    drak = val1 - val2;
-    if (drak == 0) {
-      error_code(301);
-    }
-    delay(50);
-    j = 0;
-  } else {
-    error_code(302);
-
-  }
-  }
-*/
 void liquid() {
   tft.fillScreen(TFT_BLACK);
   tft.setCursor(13, 50, 2);
@@ -135,12 +103,16 @@ void start() {
     val = scale.read(); // most recent reading
     val = (val - 149230) / 198460.0f * 177;
     val1 = val;
+    if(val1<glas){
+      error_code(302);
+      return;
+    }
     Serial.print(val1);
     delay(50);
-    if (val < 212.4) {
+    if (val < glas) {
       j = 1;
       datid = nutid;
-      while (val < 212.4) {
+      while (val < glas) {
         //DRIK DRIK DRIK
         nutid = millis();
         val = scale.read(); // most recent reading
@@ -149,15 +121,26 @@ void start() {
       }
 
     }
-    if (val > 212.4 && j == 1) {
+    if (val > glas && j == 1) {
       drikketid = nutid - datid;
-      delay(500);
-      val = scale.read(); // most recent reading
-      val = (val - 149230) / 198460.0f * 177;
+      datid = nutid;
+      delay(50);
+      while (nutid - datid < 1000) {
+        val = 0.2 * val    +   0.8 * scale.read(); // take recent average
+        val = (val - 149230) / 198460.0f * 177;
+        nutid = millis();
+      }
       val2 = val;
       drak = val2 - val1;
       Serial.println(drikketid);
       drikketid = drikketid / 1000;
+      if (drikketid == 0) {
+        error_code(303);
+        return;
+      } else if (drak == 0) {
+        error_code(301);
+        return;
+      }
       String druk = String(drikketid);
       besked("Frederik har drukket");
       String test = String(drak);
