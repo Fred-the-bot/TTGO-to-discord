@@ -1,5 +1,7 @@
 #include "HX711.h"
 #include "torta.h"
+#include <SPI.h>
+#include <TFT_eSPI.h> // Hardware-specific library
 TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 
 const int LOADCELL_DOUT_PIN = 33;
@@ -48,6 +50,14 @@ void vaegt() {
   }
 }
 
+void liquid() {
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(13, 50, 2);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
+  tft.println(drikkelse[i]);
+}
+
+
 void wifi() {
   i = -1;
   k = 0;
@@ -94,13 +104,13 @@ void besked(String content) {
           }
         } else {
           error_code(502);
-      Serial.println(https.errorToString(httpCode).c_str()); //skal kigges på
+          Serial.println(https.errorToString(httpCode).c_str()); //skal kigges på
         }
 
         https.end();
       } else {
         error_code(503);
- 
+
       }
 
       // End extra scoping block

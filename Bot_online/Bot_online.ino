@@ -3,8 +3,7 @@ int k = 0;
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
-#include <SPI.h>
-#include <TFT_eSPI.h> // Hardware-specific library
+
 #include "certificate.h"
 #include "error_codes.h"
 #include "kommandoer.h"
@@ -32,6 +31,7 @@ if(WiFi.status() != WL_CONNECTED) {
     if (k == 1) {
       besked("Frederik drikker nu");
       besked(drikkelse[i]);
+      
     } else if (k == 2 && drak!=0) {
       besked("Frederik har drukket");
       String test = String(drak);
@@ -52,9 +52,7 @@ if(WiFi.status() != WL_CONNECTED) {
     if (i == 5) {
       i = 0;
     }
-    tft.fillScreen(TFT_BLACK);
-    tft.setCursor(13, 50, 2);
-    tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
-    tft.println(drikkelse[i]);
+    liquid();
+
   }
 }
