@@ -1,14 +1,13 @@
 #include "HX711.h"
 #include "torta.h"
-
+#include "bruger_input.h"
+const char ssid[] = wifiname;
+const char pass[] = wifipassword;    // Netværks passwordet
 
 const int LOADCELL_DOUT_PIN = 33;
 const int LOADCELL_SCK_PIN = 32;
-const char ssid[] = "amfelt";    // Netværks navnet
-const char pass[] = "12345678";    // Netværks passwordet
-const String discord_webhook = "https://discordapp.com/api/webhooks/813341551782264862/f7Efm9NiinYUNTPekyvl86dS_7ymjbwLj8wr-v23sARUex120yte1ssylaft_Eq4AoK0"; //webhooken til discord "botten"
+const String discord_webhook = webhook; //webhooken til discord "botten"
 const String discord_tts = "false"; //TTS= Text To Speech "true" for at tænde det og "false" for at slå det fra
-//openssl s_client -showcerts -connect discordapp.com:443 (get last certificate)
 HX711 scale;
 String drikkelse[] = {"Cocktail", "Sodavand", "Kaffe", "Vand", "Shots"};
 int j = 0;
@@ -68,30 +67,23 @@ void besked(String content) {
           // HTTP header has been send and Server response header has been handled
           Serial.print("[HTTP] Status code: ");
           Serial.println(httpCode);
-
-          // file found at server
-          if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-            String payload = https.getString();
-            Serial.print("[HTTP] Response: ");
-            Serial.println(payload);
+          if (httpCode == 404) {
+            error_code(504);
           }
         } else {
-          error_code(502);
-          Serial.println(https.errorToString(httpCode).c_str()); //skal kigges på
+          error_code(501);
+          Serial.println(https.errorToString(httpCode).c_str());
         }
-
         https.end();
       } else {
-        error_code(503);
-
+        error_code(502);
       }
 
-      // End extra scoping block
     }
 
     delete client;
   } else {
-    error_code(504);
+    error_code(503);
 
   }
 }
@@ -103,11 +95,10 @@ void start() {
     val = scale.read(); // most recent reading
     val = (val - 149230) / 198460.0f * 177;
     val1 = val;
-    if(val1<glas){
+    if (val1 < glas) {
       error_code(302);
       return;
     }
-    Serial.print(val1);
     delay(50);
     if (val < glas) {
       j = 1;
@@ -117,7 +108,6 @@ void start() {
         nutid = millis();
         val = scale.read(); // most recent reading
         val = (val - 149230) / 198460.0f * 177;
-        Serial.println(val);
       }
 
     }
@@ -132,7 +122,6 @@ void start() {
       }
       val2 = val;
       drak = val2 - val1;
-      Serial.println(drikketid);
       drikketid = drikketid / 1000;
       if (drikketid == 0) {
         error_code(303);

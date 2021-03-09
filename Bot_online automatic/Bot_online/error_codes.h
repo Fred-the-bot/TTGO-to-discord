@@ -43,8 +43,16 @@ void error_code(int code) {
 
 
 
-    case 502: //skal kigges på
+    case 501:
       Serial.print("[HTTP] Post... failed, error: ");
+      tft.fillScreen(TFT_BLACK);
+      tft.setCursor(13, 50, 2);
+      tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
+      tft.println("ERROR: 501");
+      break;
+
+    case 502:
+      Serial.printf("[HTTP] Unable to connect\n");
       tft.fillScreen(TFT_BLACK);
       tft.setCursor(13, 50, 2);
       tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
@@ -52,21 +60,22 @@ void error_code(int code) {
       break;
 
     case 503:
-      Serial.printf("[HTTP] Unable to connect\n");
+      Serial.println("[HTTP] Unable to create client");
       tft.fillScreen(TFT_BLACK);
       tft.setCursor(13, 50, 2);
       tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
       tft.println("ERROR: 503");
       break;
 
-    case 504:
-      Serial.println("[HTTP] Unable to create client");
+    case 504: //error 404
+
       tft.fillScreen(TFT_BLACK);
       tft.setCursor(13, 50, 2);
       tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
       tft.println("ERROR: 504");
-      break;
   }
+
+
 
 
 }
