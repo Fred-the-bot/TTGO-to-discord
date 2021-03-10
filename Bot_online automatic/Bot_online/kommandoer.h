@@ -90,15 +90,18 @@ void besked(String content) {
 
 void start() {
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  val = scale.read(); // most recent reading
+  val = (val - 149230) / 198460.0f * 177; //Her skal din egen kalibrering stå.
+  val1 = val;
+  if (val1 < glas) {
+    error_code(302);
+    return;
+  }
   while (drik == true) {
     nutid = millis();
     val = scale.read(); // most recent reading
     val = (val - 149230) / 198460.0f * 177;
     val1 = val;
-    if (val1 < glas) {
-      error_code(302);
-      return;
-    }
     delay(50);
     if (val < glas) {
       j = 1;
