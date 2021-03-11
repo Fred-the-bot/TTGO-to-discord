@@ -100,27 +100,27 @@ void start() {
   while (drik == true) {
     nutid = millis();
     val = scale.read(); // most recent reading
-    val = (val - 149230) / 198460.0f * 177;
+    val = ligning;
     val1 = val;
     delay(50);
-    if (val < glas) {
+    if (val < glas) { //Starter en timer da den bemærker at glasset er løftet
       j = 1;
       datid = nutid;
       while (val < glas) {
         //DRIK DRIK DRIK
         nutid = millis();
         val = scale.read(); // most recent reading
-        val = (val - 149230) / 198460.0f * 177;
+        val =ligning;
       }
 
     }
-    if (val > glas && j == 1) {
+    if (val > glas && j == 1) { //Stopper timeren når den bemærker at glasset er på igen
       drikketid = nutid - datid;
       datid = nutid;
       delay(50);
       while (nutid - datid < 1000) {
         val = 0.2 * val    +   0.8 * scale.read(); // take recent average
-        val = (val - 149230) / 198460.0f * 177;
+        val =ligning;
         nutid = millis();
       }
       val2 = val;
