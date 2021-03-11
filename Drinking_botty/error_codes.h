@@ -74,8 +74,4 @@ void error_code(int code) {
       tft.setTextColor(TFT_WHITE, TFT_BLACK);  tft.setTextSize(3);
       tft.println("ERROR: 504");
   }
-
-
-
-
 }

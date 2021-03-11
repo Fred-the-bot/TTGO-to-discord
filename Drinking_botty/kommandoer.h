@@ -91,7 +91,7 @@ void besked(String content) {
 void start() {
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   val = scale.read(); // most recent reading
-  val = (val - 149230) / 198460.0f * 177; //Her skal din egen kalibrering stå.
+  val = ligning;
   val1 = val;
   if (val1 < glas) {
     error_code(302);
