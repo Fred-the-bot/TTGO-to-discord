@@ -9,7 +9,6 @@ HX711 scale;
 void setup() {
   Serial.begin(57600);
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-  Serial.println("hello");
 }
 
 long val = 0;
@@ -18,19 +17,12 @@ float count = 0;
 void loop() {
   count = count + 1;
 
-  // Use only one of these
- // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // take long term average
- val = 0.2 * val    +   0.8 * scale.read(); // take recent average
-  //val = scale.read(); // most recent reading
-  Serial.println((val-149230)/198460.0f*177);
-  //Serial.println( ( 8372000 - val ) / 1020.37f );
-  //  Serial.println( val );
+
+  // val = ((count - 1) / count) * val    +  (1 / count) * scale.read(); // tager gennesnittet af alt. alt hvad modulet "vejer" imens den er tændt blive puttet ind i gennemsnittet her.
+  val = 0.2 * val    +   0.8 * scale.read(); // tager et mindre gennemsnit hvor man kun bruger 80% af alle målte værdier.
+  //val = scale.read(); // Måler hvad den vejer lige nu og her. intet gennesnit eller matematik.
+  Serial.println((val)); //her ender din formel til at skulle stå.
   delay(500);
-
-  //kasse 1
-//Serial.println((val-18083 )/162980.0f*177);
-
-//kasse 2
 
 
 }
